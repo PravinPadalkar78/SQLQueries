@@ -1,0 +1,78 @@
+6. Find which salespeople currently have orders in the Orders table.
+
+select * from salespeople where snum in (select distinct snum from customers);
++------+---------+-----------+------+
+| SNUM | SNAME   | CITY      | comm |
++------+---------+-----------+------+
+| 1001 | Peel    | London    | 0.12 |
+| 1002 | Serres  | San Jose  | 0.13 |
+| 1003 | AxelRod | New York  | 0.10 |
+| 1004 | Motika  | London    | 0.11 |
+| 1007 | Rifkin  | Barcelona | 0.15 |
++------+---------+-----------+------+
+
+7. List names of all customers matched with the salespeople serving them.
+
+select c.cname from customers c
+join salespeople s on c.snum = s.snum;
+
++----------+
+| cname    |
++----------+
+| Hoffman  |
+| Giovanni |
+| Liu      |
+| Grass    |
+| Clemens  |
+| Pereira  |
+| Cisneros |
++----------+ 
+
+8. Find the names and numbers of all salespeople who had more than one customer.
+select sname,c.snum,count(*) as No_Of_Orders from salespeople s 
+join customers c on s.snum = c.snum
+group by c.snum
+having count(*) >1;
+
++--------+------+--------------+
+| sname  | snum | No_Of_Orders |
++--------+------+--------------+
+| Peel   | 1001 |            2 |
+| Serres | 1002 |            2 |
++--------+------+--------------+ 
+
+9. Count the orders of each of the salespeople and output the results in descending order.
+
+select s.sname , count(onum) as Orders_Count
+from salespeople s left join orders o 
+on s.snum = o.snum 
+group by s.snum
+order by Orders_Count DESC;
+
++---------+--------------+
+| sname   | Orders_Count |
++---------+--------------+
+| Peel    |            3 |
+| Serres  |            2 |
+| AxelRod |            2 |
+| Rifkin  |            2 |
+| Motika  |            1 |
+| Fran    |            0 |
++---------+--------------+
+
+10. List the Customer table if and only if one or more of the customers in the Customer table are located in San Jose.
+select * from customers 
+where exists 
+	(select 1 from customers 
+	 where city = 'San Jose' );
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2001 | Hoffman  | London   |    100 | 1001 |
+| 2002 | Giovanni | Rome     |    200 | 1003 |
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2006 | Clemens  | London   |    100 | 1001 |
+| 2007 | Pereira  | Rome     |    100 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
