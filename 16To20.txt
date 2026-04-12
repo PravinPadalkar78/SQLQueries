@@ -1,0 +1,53 @@
+16. Find all customers with orders on march 10.
+
+select *
+from customers c join orders o on c.cnum = o.cnum
+where Month(odate) = 3 and day(odate) = 10;
++------+----------+----------+--------+------+------+---------+------------+------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM | ONUM | AMT     | ODATE      | CNUM | SNUM |
++------+----------+----------+--------+------+------+---------+------------+------+------+
+| 2001 | Hoffman  | London   |    100 | 1001 | 3003 |  767.19 | 1996-03-10 | 2001 | 1001 |
+| 2003 | Liu      | San Jose |    200 | 1002 | 3005 | 5160.45 | 1996-03-10 | 2003 | 1002 |
+| 2007 | Pereira  | Rome     |    100 | 1004 | 3002 | 1900.10 | 1996-03-10 | 2007 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 | 3001 |   18.69 | 1996-03-10 | 2008 | 1007 |
+| 2008 | Cisneros | San Jose |    300 | 1007 | 3006 | 1098.16 | 1996-03-10 | 2008 | 1007 |
++------+----------+----------+--------+------+------+---------+------------+------+------+ 
+
+
+17.Give the sums of the amounts from the Orders table, grouped by date, eliminating all those dates where the SUM was not at least 2000.00 above the MAX amount.
+
+select odate,sum(amt) as order_sum , max(amt) as max_order from orders 
+group by odate 
+having (sum(amt) -max(amt))>2000;
++------------+-----------+-----------+
+| odate      | order_sum | max_order |
++------------+-----------+-----------+
+| 1996-03-10 |   8944.59 |   5160.45 |
++------------+-----------+-----------+ 
+
+
+18.Select all orders that had amounts that were greater than at least one of the orders from October 6.
+select * from orders 
+where amt > any(select min(amt) from orders where (month(odate)=10 and date(odate) =6))
+
+19.Write a query that uses the EXISTS operator to extract all salespeople who have customers with a rating of 300.
+select * from salespeople s 
+where exists (select 1 from customers c
+	      where s.snum = c.snum and
+	      rating =300	);
+
+20. Find all pairs of customers having the same rating.
+
+select c1.snum,c2.snum,c1.rating
+from customers c1 ,customers c2
+where c1.cnum<c2.cnum and c1.rating = c2.rating;
+
++------+------+--------+
+| snum | snum | rating |
++------+------+--------+
+| 1001 | 1001 |    100 |
+| 1001 | 1004 |    100 |
+| 1003 | 1002 |    200 |
+| 1002 | 1007 |    300 |
+| 1001 | 1004 |    100 |
++------+------+--------+
