@@ -1,0 +1,62 @@
+11. Match salespeople to customers according to what city they lived in.
+
+select s.sname,c.cname,s.city from salespeople s join
+customers c on s.city = c.city; 
+
++--------+----------+----------+
+| sname  | cname    | city     |
++--------+----------+----------+
+| Fran   | Hoffman  | London   |
+| Motika | Hoffman  | London   |
+| Peel   | Hoffman  | London   |
+| Serres | Liu      | San Jose |
+| Fran   | Clemens  | London   |
+| Motika | Clemens  | London   |
+| Peel   | Clemens  | London   |
+| Serres | Cisneros | San Jose |
++--------+----------+----------+ 
+
+12.Find the largest order taken by each salesperson.
+select s.sname, s.snum , max(amt) as largest_order
+from salespeople s join orders o on s.snum = o.snum
+group by o.snum;
+
++---------+------+---------------+
+| sname   | snum | largest_order |
++---------+------+---------------+
+| Rifkin  | 1007 |       1098.16 |
+| Motika  | 1004 |       1900.10 |
+| Peel    | 1001 |       9891.88 |
+| Serres  | 1002 |       5160.45 |
+| AxelRod | 1003 |       1713.23 |
++---------+------+---------------+ 
+
+
+13.Find customers in San Jose who have a rating above 200.
+
+select * from customers where city = 'San Jose' and rating =200;
++------+-------+----------+--------+------+
+| CNUM | CNAME | CITY     | RATING | SNUM |
++------+-------+----------+--------+------+
+| 2003 | Liu   | San Jose |    200 | 1002 |
++------+-------+----------+--------+------+ 
+
+14. List the names and commissions of all salespeople in London.
+select sname, comm from salespeople where city = 'London'
++--------+------+
+| sname  | comm |
++--------+------+
+| Peel   | 0.12 |
+| Motika | 0.11 |
+| Fran   | 0.26 |
++--------+------+ 
+
+15. List all the orders of salesperson Motika from the Orders table.
+select  *
+from orders where snum in (select snum from salespeople where sname ='Motika')
++------+---------+------------+------+------+
+| ONUM | AMT     | ODATE      | CNUM | SNUM |
++------+---------+------------+------+------+
+| 3002 | 1900.10 | 1996-03-10 | 2007 | 1004 |
++------+---------+------------+------+------+ 
+
