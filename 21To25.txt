@@ -1,0 +1,74 @@
+ 21 . Find all customers whose CNUM is 1000 above the SNUM of Serres.
+
+select * from customers where cnum > (select snum+1000 from salespeople where sname = 'Serres');
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2006 | Clemens  | London   |    100 | 1001 |
+| 2007 | Pereira  | Rome     |    100 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
+
+22.Give the salespeople’s commissions as percentages instead of decimal numbers.
+select sname,comm*100 as percentage from salespeople;
+
++---------+------------+
+| sname   | percentage |
++---------+------------+
+| Peel    |      12.00 |
+| Serres  |      13.00 |
+| AxelRod |      10.00 |
+| Motika  |      11.00 |
+| Fran    |      26.00 |
+| Rifkin  |      15.00 |
++---------+------------+ 
+
+23. Find the largest order taken by each salesperson on each date, eliminating those MAX orders which are less than $3000.00 in value.
+
+select sname,s.snum,max(amt)
+from salespeople s join orders o
+on s.snum = o.snum
+group by s.snum,odate,s.sname
+having max(amt) >3000;
+
++--------+------+----------+
+| sname  | snum | max(amt) |
++--------+------+----------+
+| Serres | 1002 |  5160.45 |
+| Peel   | 1001 |  4723.00 |
+| Peel   | 1001 |  9891.88 |
++--------+------+----------+ 
+
+24. List the largest orders for October 3, for each salesperson.
+select snum,max(amt)
+from orders
+where month(odate) =3 and day(odate) = 10
+group by snum;
+
++------+----------+
+| snum | max(amt) |
++------+----------+
+| 1001 |   767.19 |
+| 1002 |  5160.45 |
+| 1004 |  1900.10 |
+| 1007 |  1098.16 |
++------+----------+
+
+
+25Find all customers located in cities where Serres (SNUM 1002) has customers.
+select * from customers where city in (select city from salespeople where sname = 'Serres');
+
+select * from customers
+where city in 
+	    (select city from  customers 
+	     where snum = (select snum from salespeople where sname = 'Serres'));
+
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
