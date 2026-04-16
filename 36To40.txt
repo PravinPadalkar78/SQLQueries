@@ -1,0 +1,76 @@
+
+36. Select all the possible combinations of customers that you can assign.
+
+select c1.cnum,c2.cnum
+from customers c1 , customers c2
+where c1.cnum < c2.cnum;
+
++------+------+
+| cnum | cnum |
++------+------+
+| 2001 | 2002 |
+| 2001 | 2003 |
+| 2001 | 2004 |
+| 2001 | 2006 |
+| 2001 | 2007 |
+| 2001 | 2008 |
+| 2006 | 2007 |
+| 2006 | 2008 |
+| 2003 | 2004 |
+| 2003 | 2006 |
+| 2003 | 2007 |
+| 2003 | 2008 |
+| 2004 | 2006 |
+| 2004 | 2007 |
+| 2004 | 2008 |
+| 2002 | 2003 |
+| 2002 | 2004 |
+| 2002 | 2006 |
+| 2002 | 2007 |
+| 2002 | 2008 |
+| 2007 | 2008 |
++------+------+ 
+
+37.Select all orders that are greater than the average for October 4.
+
+select * from orders where 
+amt > (select avg(amt) from orders where month(odate) = 10 and date(odate)=4);
+
+38.Write a select command using a corelated subquery that selects the names and numbers of all customers with ratings equal to the maximum for their city.
+
+select cname , cnum,c1.city from customers c1 where rating =(select max(rating) from customers c2 where c1.city = c2.city);
++----------+------+----------+
+| cname    | cnum | city     |
++----------+------+----------+
+| Hoffman  | 2001 | London   |
+| Giovanni | 2002 | Rome     |
+| Grass    | 2004 | Berlin   |
+| Clemens  | 2006 | London   |
+| Cisneros | 2008 | San Jose |
++----------+------+----------+
+
+39.Write a query that totals the orders for each day and places the results in descending order.
+select odate,sum(amt) as total_sum from orders
+group by odate
+order by total_sum desc;
++------------+-----------+
+| odate      | total_sum |
++------------+-----------+
+| 1996-06-10 |  11201.83 |
+| 1996-03-10 |   8944.59 |
+| 1996-05-10 |   4723.00 |
+| 1996-04-10 |   1788.98 |
++------------+-----------+
+
+
+40. Write a select command that produces the rating followed by the name of each customer in San Jose.
+select rating,cname,city from customers where city ='San Jose'; 
+
++--------+----------+----------+
+| rating | cname    | city     |
++--------+----------+----------+
+|    200 | Liu      | San Jose |
+|    300 | Cisneros | San Jose |
++--------+----------+----------+
+
+
