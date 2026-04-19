@@ -1,0 +1,60 @@
+41. Find all orders with amounts smaller than any amount for a customer in San Jose.
+
+select * from orders where amt < any(select amt
+from orders o join customers c
+on o.snum = c.snum
+where c.city = 'San Jose');
+
++------+---------+------------+------+------+
+| ONUM | AMT     | ODATE      | CNUM | SNUM |
++------+---------+------------+------+------+
+| 3001 |   18.69 | 1996-03-10 | 2008 | 1007 |
+| 3002 | 1900.10 | 1996-03-10 | 2007 | 1004 |
+| 3003 |  767.19 | 1996-03-10 | 2001 | 1001 |
+| 3006 | 1098.16 | 1996-03-10 | 2008 | 1007 |
+| 3007 |   75.75 | 1996-04-10 | 2002 | 1003 |
+| 3008 | 4723.00 | 1996-05-10 | 2006 | 1001 |
+| 3009 | 1713.23 | 1996-04-10 | 2002 | 1003 |
+| 3010 | 1309.95 | 1996-06-10 | 2004 | 1002 |
++------+---------+------------+------+------+
+
+42. Find all orders with above average amounts for their customers.
+select * from orders o where amt > (select avg(amt) from orders where o.cnum = cnum);
+
++------+---------+------------+------+------+
+| ONUM | AMT     | ODATE      | CNUM | SNUM |
++------+---------+------------+------+------+
+| 3006 | 1098.16 | 1996-03-10 | 2008 | 1007 |
+| 3009 | 1713.23 | 1996-04-10 | 2002 | 1003 |
+| 3011 | 9891.88 | 1996-06-10 | 2006 | 1001 |
++------+---------+------------+------+------+ 
+
+43. Write a query that selects the highest rating in each city.
+select city,max(rating) from customers group by city;
++----------+-------------+
+| city     | max(rating) |
++----------+-------------+
+| London   |         100 |
+| Rome     |         200 |
+| San Jose |         300 |
+| Berlin   |         300 |
++----------+-------------+ 
+
+
+44.Write a query that calculates the amount of the salesperson’s commission on each order by a customer with a rating above 100.00.
+
+select s.snum,s.sname , (s.comm * o.amt) as comm_amt
+from orders o 
+JOIN customers c ON o.cnum = c.cnum
+JOIN salespeople s ON o.snum = c.snum
+where c.rating > 100; 
+
+
+
+45. Count the customers with ratings above San Jose’s average.
+select count(distinct cnum) from customers where rating >(select avg(rating) from customers where city ="San Jose");
++----------------------+
+| count(distinct cnum) |
++----------------------+
+|                    2 |
++----------------------+
