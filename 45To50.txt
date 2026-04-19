@@ -1,0 +1,84 @@
+46. Write a query that produces all pairs of salespeople with themselves as well as duplicate rows with the order reversed.
+
+select s1.snum ,s2.snum
+from salespeople s1 , salespeople s2
+where s1.snum <= s2.snum;
+
++------+------+
+| snum | snum |
++------+------+
+| 1001 | 1001 |
+| 1001 | 1002 |
+| 1001 | 1003 |
+| 1001 | 1004 |
+| 1001 | 1005 |
+| 1001 | 1007 |
+| 1002 | 1002 |
+| 1002 | 1003 |
+| 1002 | 1004 |
+| 1002 | 1005 |
+| 1002 | 1007 |
+| 1003 | 1003 |
+| 1003 | 1004 |
+| 1003 | 1005 |
+| 1003 | 1007 |
+| 1004 | 1004 |
+| 1004 | 1005 |
+| 1004 | 1007 |
+| 1005 | 1005 |
+| 1005 | 1007 |
+| 1007 | 1007 |
++------+------+ 
+
+47. Find all salespeople that are located in either Barcelona or London.
+select * from salespeople where city in('Barcelona','London');
+
++------+--------+-----------+------+
+| SNUM | SNAME  | CITY      | comm |
++------+--------+-----------+------+
+| 1001 | Peel   | London    | 0.12 |
+| 1004 | Motika | London    | 0.11 |
+| 1005 | Fran   | London    | 0.26 |
+| 1007 | Rifkin | Barcelona | 0.15 |
++------+--------+-----------+------+ 
+
+48. Find all salespeople with only one customer.
+select * from salespeople s  
+where s.snum IN 
+	(select snum from customers 
+	 group by snum 
+	 having count(*) = 1 );
+
++------+---------+-----------+------+
+| SNUM | SNAME   | CITY      | comm |
++------+---------+-----------+------+
+| 1003 | AxelRod | New York  | 0.10 |
+| 1004 | Motika  | London    | 0.11 |
+| 1007 | Rifkin  | Barcelona | 0.15 |
++------+---------+-----------+------+ 
+
+49. Write a query that joins the Customer table to itself to find all pairs of customers served by a single salesperson.
+
+select c1.cnum,c2.cnum,c1.snum,c2.snum
+from customers c1 join customers c2 
+where c1.cnum < c2.cnum and c1.snum = c2.snum;
++------+------+------+------+
+| cnum | cnum | snum | snum |
++------+------+------+------+
+| 2001 | 2006 | 1001 | 1001 |
+| 2003 | 2004 | 1002 | 1002 |
++------+------+------+------+ 
+
+50. Write a query that will give you all orders for more than $1000.00
+select * from orders where amt >1000
++------+---------+------------+------+------+
+| ONUM | AMT     | ODATE      | CNUM | SNUM |
++------+---------+------------+------+------+
+| 3002 | 1900.10 | 1996-03-10 | 2007 | 1004 |
+| 3005 | 5160.45 | 1996-03-10 | 2003 | 1002 |
+| 3006 | 1098.16 | 1996-03-10 | 2008 | 1007 |
+| 3008 | 4723.00 | 1996-05-10 | 2006 | 1001 |
+| 3009 | 1713.23 | 1996-04-10 | 2002 | 1003 |
+| 3010 | 1309.95 | 1996-06-10 | 2004 | 1002 |
+| 3011 | 9891.88 | 1996-06-10 | 2006 | 1001 |
++------+---------+------------+------+------+
