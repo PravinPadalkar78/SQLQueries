@@ -1,0 +1,75 @@
+51. Write a query that lists each order number followed by the name of the customer who made that order.
+
+select o.* ,cname
+from orders o join customers c
+ON o.cnum = c.cnum;
+
++------+---------+------------+------+------+----------+
+| ONUM | AMT     | ODATE      | CNUM | SNUM | cname    |
++------+---------+------------+------+------+----------+
+| 3001 |   18.69 | 1996-03-10 | 2008 | 1007 | Cisneros |
+| 3002 | 1900.10 | 1996-03-10 | 2007 | 1004 | Pereira  |
+| 3003 |  767.19 | 1996-03-10 | 2001 | 1001 | Hoffman  |
+| 3005 | 5160.45 | 1996-03-10 | 2003 | 1002 | Liu      |
+| 3006 | 1098.16 | 1996-03-10 | 2008 | 1007 | Cisneros |
+| 3007 |   75.75 | 1996-04-10 | 2002 | 1003 | Giovanni |
+| 3008 | 4723.00 | 1996-05-10 | 2006 | 1001 | Clemens  |
+| 3009 | 1713.23 | 1996-04-10 | 2002 | 1003 | Giovanni |
+| 3010 | 1309.95 | 1996-06-10 | 2004 | 1002 | Grass    |
+| 3011 | 9891.88 | 1996-06-10 | 2006 | 1001 | Clemens  |
++------+---------+------------+------+------+----------+ 
+
+
+52. Write 2 queries that select all salespeople (by name and number) who have customers in their cities who they do not service, one using a join and one a corelated subquery. Which solution is more elegant?
+
+select s.sname , s.snum,s.city from salespeople s join customers c
+ON s.city = c.city
+where s.snum != c.snum; 
++--------+------+----------+
+| sname  | snum | city     |
++--------+------+----------+
+| Fran   | 1005 | London   |
+| Motika | 1004 | London   |
+| Fran   | 1005 | London   |
+| Motika | 1004 | London   |
+| Serres | 1002 | San Jose |
++--------+------+----------+  
+
+select * from customers 
+where rating >=any
+	(select rating from 
+	 customers c join salespeople s 
+	 on c.snum = s.snum
+	 where sname ='Serres');
+
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2002 | Giovanni | Rome     |    200 | 1003 |
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+ 
+
+54. Write 2 queries that will produce all orders taken on October 3 or October 4.
+//my date is YYYY-MM-DD
+select * from orders where month(odate) = 10 and day(odate) in (3,4);
+select * from orders where odate between '1996-03-10' and '1996-04-10';  
+
+55.Write a query that produces all pairs of orders by a given customer. Name that customer and
+eliminate duplicates.
+select c.cnum,c.cname , o1.onum,o2.onum
+from customers c 
+join orders o1 ON c.cnum = o1.cnum 
+join orders o2 ON c.cnum = o2.cnum
+where o1.onum < o2.onum;
+
++------+----------+------+------+
+| cnum | cname    | onum | onum |
++------+----------+------+------+
+| 2002 | Giovanni | 3007 | 3009 |
+| 2006 | Clemens  | 3008 | 3011 |
+| 2008 | Cisneros | 3001 | 3006 |
++------+----------+------+------+
+
+
