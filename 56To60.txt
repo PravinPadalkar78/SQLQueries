@@ -1,0 +1,42 @@
+56.Find only those customers whose ratings are higher than every customer in Rome.
+select * from customers where rating >all (select rating from customers where city='Rome');
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2008 | Cisneros | San Jose |    300 | 1007 |
++------+----------+----------+--------+------+
+
+ 
+57. Write a query on the Customers table whose output will exclude all customers with a rating <=
+100.00, unless they are located in Rome.
+
+select * from customers where rating >100 or city ='Rome';
++------+----------+----------+--------+------+
+| CNUM | CNAME    | CITY     | RATING | SNUM |
++------+----------+----------+--------+------+
+| 2002 | Giovanni | Rome     |    200 | 1003 |
+| 2003 | Liu      | San Jose |    200 | 1002 |
+| 2004 | Grass    | Berlin   |    300 | 1002 |
+| 2007 | Pereira  | Rome     |    100 | 1004 |
+| 2008 | Cisneros | San Jose |    300 | 1007 | 
++------+----------+----------+--------+------+ 
+
+58. Find all rows from the Customers table for which the salesperson number is 1001.
+select * from customers where snum = 1001;
++------+---------+--------+--------+------+
+| CNUM | CNAME   | CITY   | RATING | SNUM |
++------+---------+--------+--------+------+
+| 2001 | Hoffman | London |    100 | 1001 |
+| 2006 | Clemens | London |    100 | 1001 |
++------+---------+--------+--------+------+ 
+
+59. Find the total amount in Orders for each salesperson for whom this total is greater than the
+amount of the largest order in the table.
+
+select snum,sum(amt) as total from orders group by snum having sum(amt) >(select max(amt) from orders) ;
++------+----------+
+| snum | total    |
++------+----------+
+| 1001 | 15382.07 |
++------+----------+ 
